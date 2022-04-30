@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show,:update,:edit,:delete]
+  before_action :set_user, only: [:show, :update, :edit, :destroy]
+  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
+  before_action :correct_user, only: [:show, :edit, :update, :destroy]
 
   def index
     @users = User.all
@@ -13,6 +15,8 @@ class UsersController < ApplicationController
   def create
     @user = User.create(user_params)
     if @user.save
+      log_in @user
+      # flash[:success] = "ログイン成功"
       redirect_to users_path
     else
       render 'new'
@@ -34,6 +38,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    log_out
     @user.destroy
     redirect_to users_path
   end
@@ -41,9 +46,20 @@ class UsersController < ApplicationController
 
   private
 
-  def set_user
-    @user = User.find(params[:id])
-  end
+    def set_user
+      @user = User.find(params[:id])
+    end
+
+    def logged_in_user
+      unless logged_in?
+        flash[:danger] = "ログインしてください"
+        redirect_to login_path
+      end
+    end
+
+    def correct_user
+      redirect_to questions_path unless current_user?(@user)
+    end
 
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
