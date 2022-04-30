@@ -5,6 +5,9 @@ class User < ApplicationRecord
                     length: { maximum: 255 },
                     uniqueness: { case_sensitive: false }
 
+  has_secure_password
+  validates :password, presence: true, length: { minimum: 8 }
+
   has_one_attached :avatar
 
 end
