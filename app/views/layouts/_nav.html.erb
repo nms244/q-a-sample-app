@@ -1,10 +1,10 @@
 <nav>
-  <%= link_to "Q & A Sample app", '#' %>
+  <%= link_to "Q & A Sample app", root_path %>
   <div>
     <ul>
     <% if logged_in? %>
       <li>
-        <%= link_to "質問作成", '#' %>
+        <%= link_to "質問作成", new_question_path %>
       </li>
       <li>
         <%= link_to "ログアウト", logout_path, method: :delete %>
