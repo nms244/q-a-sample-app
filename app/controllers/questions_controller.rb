@@ -1,5 +1,4 @@
 class QuestionsController < ApplicationController
-  before_action :set_question, only: :show
   before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update, :destroy]
 
@@ -21,6 +20,9 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @question = Question.find(params[:id])
+    @answers = @question.answers
+    @answer = current_user.answers.build
   end
 
   def edit
@@ -40,10 +42,6 @@ class QuestionsController < ApplicationController
   end
 
   private
-
-    def set_question
-      @question = Question.find(params[:id])
-    end
 
     def correct_user
       @question = current_user.questions.find_by(id: params[:id])

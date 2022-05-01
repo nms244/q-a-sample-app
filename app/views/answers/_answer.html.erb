@@ -1,0 +1,6 @@
+<li>
+  <%= answer.user.name %>：<%= answer.body %>
+  <% if current_user.id == answer.user_id %>
+    <%= link_to '削除', question_answer_path(@question, answer), method: :delete, data: {confirm: "回答を削除します"}  %>
+  <% end %>
+</li>

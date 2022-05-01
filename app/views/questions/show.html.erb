@@ -3,5 +3,16 @@
 <ul>
   <li><%= @question.title %></li>
   <li><%= simple_format(@question.body) %></li>
-  <li><%= link_to "質問削除", @question, method: :delete, data: {confirm: "質問を削除します"} %></li>
+  <% if current_user.id == @question.user_id %>
+    <li><%= link_to "質問削除", @question, method: :delete, data: {confirm: "質問を削除します"} %></li>
+  <% end %>
 </ul>
+
+<h2>回答</h2>
+<ul>
+  <%= render @answers %>
+</ul>
+
+<% if logged_in? %>
+  <%= render '/answers/form' %>
+<% end %>

@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     if @user.save
       log_in @user
       # flash[:success] = "ログイン成功"
-      redirect_to users_path
+      redirect_to root_path
     else
       render 'new'
     end
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to users_path
+      redirect_to root_path
     else
       render 'edit'
     end
