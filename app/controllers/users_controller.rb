@@ -17,9 +17,10 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       log_in @user
-      # flash[:success] = "ログイン成功"
+      flash[:success] = 'ユーザ登録完了'
       redirect_to root_path
     else
+      flash.now[:danger] = 'ユーザ登録失敗'
       render 'new'
     end
   end
@@ -32,8 +33,10 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
+      flash[:success] = 'ユーザ情報を更新しました'
       redirect_to root_path
     else
+      flash.now[:danger] = 'ユーザ情報の更新に失敗しました'
       render 'edit'
     end
   end
@@ -41,6 +44,7 @@ class UsersController < ApplicationController
   def destroy
     log_out
     @user.destroy
+    flash[:success] = 'ユーザを削除しました'
     redirect_to users_path
   end
 
@@ -52,7 +56,10 @@ class UsersController < ApplicationController
     end
 
     def correct_user
-      redirect_to questions_path unless current_user?(@user)
+      unless current_user?(@user)
+        flash[:danger] = '他のユーザは編集できません'
+        redirect_to questions_path
+      end
     end
 
     def user_params
