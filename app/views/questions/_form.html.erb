@@ -1,0 +1,13 @@
+<%= form_with(model: @question, local: true) do |f| %>
+
+  <%= f.label :title, "タイトル" %>
+  <%= f.text_field :title %>
+
+  <%= f.label :body, "質問内容" %>
+  <%= f.text_area :body, size: "30x10" %>
+
+  <%= f.hidden_field :user_id, value: @current_user.id %>
+
+
+  <%= f.submit "質問する" %>
+<% end %>

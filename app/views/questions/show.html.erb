@@ -1,0 +1,7 @@
+<h1>Questions#show</h1>
+
+<ul>
+  <li><%= @question.title %></li>
+  <li><%= simple_format(@question.body) %></li>
+  <li><%= link_to "質問削除", @question, method: :delete, data: {confirm: "質問を削除します"} %></li>
+</ul>

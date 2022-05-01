@@ -1,0 +1,18 @@
+<h1>Questions#index</h1>
+
+<ul>
+  <% @questions.each do |question| %>
+  <li>
+    <%= question.user.name %>
+  </li>
+  <li>
+    <%= question.title %>
+  </li>
+  <li>
+    <%= simple_format(question.body) %>
+  </li>
+  <li>
+    <%= link_to "質問削除", question, method: :delete, data: {confirm: "質問を削除します"} %>
+  </li>
+  <% end %>
+</ul>
