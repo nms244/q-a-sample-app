@@ -10,5 +10,13 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def admin_user
+      logged_in_user
+      unless current_user.admin?
+        flash[:danger] = "管理者ユーザ以外はアクセスできません"
+        redirect_to root_path
+      end
+    end
+
 
 end
