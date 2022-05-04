@@ -1,0 +1,22 @@
+<h1>Admin::Questions#index</h1>
+<p>Find me in app/views/admin/questions/index.html.erb</p>
+
+<ul>
+  <% @questions.each do |question| %>
+    <li>
+      <%= question.user.name %>
+    </li>
+    <li>
+      <%= question.title %>
+    </li>
+    <li>
+      <%= simple_format(question.body) %>
+    </li>
+    <li>
+      <%= link_to "回答を見る", question %>
+    </li>
+    <li>
+      <%= link_to "質問削除", question, method: :delete, data: {confirm: "質問を削除します"} %>
+    </li>
+  <% end %>
+</ul>
