@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  namespace :admin do
-    get 'questions/index'
-    get 'questions/destroy'
-  end
   root "questions#index"
 
   get    '/login',   to: 'sessions#new'

@@ -16,7 +16,7 @@
       <%= link_to "回答を見る", question %>
     </li>
     <li>
-      <%= link_to "質問削除", question, method: :delete, data: {confirm: "質問を削除します"} %>
+      <%= link_to "質問削除", admin_question_path(question), method: :delete, data: {confirm: "質問を削除します"} %>
     </li>
   <% end %>
 </ul>

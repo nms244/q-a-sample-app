@@ -1,6 +1,6 @@
 class Admin::QuestionsController < ApplicationController
 
-  # before_action :admin_user
+  before_action :admin_user
 
 
   def index
@@ -8,9 +8,9 @@ class Admin::QuestionsController < ApplicationController
   end
 
   def destroy
-    @question = Questions.find(params[:id])
+    @question = Question.find(params[:id])
     @question.destroy
     flash[:success] = '質問を削除しました'
-    redirect_to admin_users_paths
+    redirect_to admin_users_path
   end
 end
