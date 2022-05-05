@@ -16,7 +16,7 @@ class QuestionsController < ApplicationController
       flash[:success] = '質問を作成しました'
       redirect_to root_url
     else
-      flash[:danger] = '質問の作成ができませんでした'
+      flash.now[:danger] = '質問の作成ができませんでした'
       render 'new'
     end
   end
@@ -35,7 +35,7 @@ class QuestionsController < ApplicationController
       flash[:success] = '質問を更新しました'
       redirect_to questions_path
     else
-      flash[:danger] = '質問の更新ができませんでした'
+      flash.now[:danger] = '質問の更新ができませんでした'
       render 'edit'
     end
   end

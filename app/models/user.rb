@@ -9,6 +9,7 @@ class User < ApplicationRecord
                     length: { maximum: 255 },
                     uniqueness: { case_sensitive: false }
   validates :password, presence: true, length: { minimum: 8 }
+  validates :admin, inclusion: [true, false]
 
   has_secure_password
 
