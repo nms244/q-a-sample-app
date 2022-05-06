@@ -1,12 +1,27 @@
 <h1>Questions#index</h1>
 
 <ul>
+  <li><%= link_to "全て", root_path %></li>
+</ul>
+<ul>
+  <li><%= link_to "未解決", unsolved_questions_path %></li>
+</ul>
+<ul>
+  <li><%= link_to "解決", solved_questions_path %></li>
+</ul>
+
+<ul>
   <% @questions.each do |question| %>
     <li>
       <%= question.user.name %>
     </li>
     <li>
       <%= question.title %>
+      <% if question.solved %>
+        <span>解決済み</span>
+      <% else %>
+        <span>未解決</span>
+      <% end %>
     </li>
     <li>
       <%= simple_format(question.body) %>

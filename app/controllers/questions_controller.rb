@@ -1,9 +1,19 @@
 class QuestionsController < ApplicationController
-  before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy, :solve]
+  before_action :correct_user, only: [:edit, :update, :destroy, :solve]
 
   def index
     @questions = Question.order(created_at: :desc).page(params[:page]).per(5)
+  end
+
+  def solved
+    @questions = Question.where(solved: true).order(created_at: :desc).page(params[:page]).per(5)
+    render 'index'
+  end
+
+  def unsolved
+    @questions = Question.where(solved: false).order(created_at: :desc).page(params[:page]).per(5)
+    render 'index'
   end
 
   def new
@@ -45,6 +55,16 @@ class QuestionsController < ApplicationController
     @question.destroy
     flash[:success] = '質問を削除しました'
     redirect_to root_url
+  end
+
+  def solve
+    if @question.update(solved: true)
+      flash[:success] = '解決済みにしました'
+      redirect_to question_path(@question)
+    else
+      flash.now[:danger] = '解決済みにできませんでした'
+      render question_url(@question)
+    end
   end
 
   private
