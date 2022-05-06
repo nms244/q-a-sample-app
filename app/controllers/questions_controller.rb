@@ -13,6 +13,7 @@ class QuestionsController < ApplicationController
   def create
     @question = current_user.questions.build(question_params)
     if @question.save
+      QaMailer.question_notification(@question).deliver_now
       flash[:success] = '質問を作成しました'
       redirect_to root_url
     else

@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   def create
     @answer = current_user.answers.build(answer_params)
     if @answer.save
+      QaMailer.answer_notification(@answer).deliver_now
       flash[:success] = '回答しました'
       redirect_to question_path(@answer.question_id)
     else
