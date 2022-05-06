@@ -2,7 +2,7 @@ class QaMailer < ApplicationMailer
 
   def question_notification(question)
     @question = question
-    @emails = User.where.not(id: question.user_id).pluck(:email)
+    @emails = User.all.pluck(:email)
 
     mail bcc: @emails,
          subject: "質問が作成されました"

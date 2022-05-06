@@ -25,7 +25,7 @@ class QuestionsController < ApplicationController
     if @question.save
       QaMailer.question_notification(@question).deliver_now
       flash[:success] = '質問を作成しました'
-      redirect_to root_url
+      redirect_to @question
     else
       flash.now[:danger] = '質問の作成ができませんでした'
       render 'new'
