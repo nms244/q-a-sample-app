@@ -4,7 +4,7 @@ class Admin::QuestionsController < ApplicationController
 
 
   def index
-    @questions = Question.all
+    @questions = Question.order(created_at: :desc).page(params[:page]).per(5)
   end
 
   def destroy

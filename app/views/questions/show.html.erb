@@ -2,6 +2,14 @@
 
 <ul>
   <li><%= @question.title %></li>
+
+  <% if @question.solved %>
+    <span>解決済み</span>
+  <% else %>
+    <span>未解決</span>
+    <%= button_to "解決済みにする", solve_question_path(@question), method: :post, data: {confirm: "質問を解決済みにします"} %>
+  <% end %>
+
   <li><%= simple_format(@question.body) %></li>
   <% if logged_in? && current_user.id == @question.user_id %>
     <li><%= link_to "質問削除", @question, method: :delete, data: {confirm: "質問を削除します"} %></li>
