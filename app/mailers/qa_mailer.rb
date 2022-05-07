@@ -1,18 +1,15 @@
 class QaMailer < ApplicationMailer
-  def question_notification(question)
+  def question_notification(question, email)
     @question = question
-    @emails = User.where.not(id: question.user_id).pluck(:email)
 
-    mail bcc: @emails,
+    mail to: email,
          subject: '質問が作成されました'
   end
 
-  def answer_notification(answer)
+  def answer_notification(answer, email)
     @answer = answer
-    user_ids = answer.question.answers.where.not(user_id: answer.user_id).pluck(:user_id) + [answer.question.user_id]
-    @emails = User.where(id: user_ids).pluck(:email)
 
-    mail bcc: @emails,
+    mail to: email,
          subject: '質問に回答がつきました'
   end
 end

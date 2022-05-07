@@ -6,5 +6,5 @@
   <%= f.label :body, "質問内容" %>
   <%= f.text_area :body, size: "30x10" %>
 
-  <%= f.submit "質問する" %>
+  <%= f.submit yield(:button_text) %>
 <% end %>

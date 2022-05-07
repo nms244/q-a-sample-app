@@ -14,4 +14,8 @@ class User < ApplicationRecord
   has_secure_password
 
   has_one_attached :avatar
+
+  # def current_user?
+  #   current_user.id == id
+  # end
 end

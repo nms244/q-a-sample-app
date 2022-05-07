@@ -1,18 +1,21 @@
 <h1>Questions#show</h1>
 
-<ul>
+<ul id='question-area' >
   <li><%= @question.title %></li>
 
   <% if @question.solved %>
     <span>解決済み</span>
   <% else %>
     <span>未解決</span>
-    <%= button_to "解決済みにする", solve_question_path(@question), method: :post, data: {confirm: "質問を解決済みにします"} %>
+    <% if logged_in? && current_user.id == @question.user_id %>
+      <%= button_to "解決済みにする", solve_question_path(@question), method: :post, data: {confirm: "質問を解決済みにします"} %>
+    <% end %>
   <% end %>
 
   <li><%= simple_format(@question.body) %></li>
   <% if logged_in? && current_user.id == @question.user_id %>
-    <li><%= link_to "質問削除", @question, method: :delete, data: {confirm: "質問を削除します"} %></li>
+    <li><%= link_to "編集", edit_question_path(@question) %></li>
+    <li><%= link_to "削除", @question, method: :delete, data: {confirm: "質問を削除します"} %></li>
   <% end %>
 </ul>
 

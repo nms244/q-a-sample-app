@@ -49,10 +49,13 @@ class UsersController < ApplicationController
   private
 
   def set_user
+    # if current_user.id == params[:id]
+    #   @user = User.find(current_user.id)
+    # else
+    #   raise RecordNotFound
+    # end
     if current_user.id == params[:id]
       @user = User.find(current_user.id)
-    else
-      raise RecordNotFound
     end
   end
 

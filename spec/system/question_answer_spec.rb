@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe '質問から回答までの一連の流れ', type: :system do
   describe '基本的な操作' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user)}
     it '質問から回答までの一連の流れが正しく行われること' do
       visit '/login'
       fill_in 'メールアドレス', with: user.email
@@ -12,11 +12,11 @@ RSpec.describe '質問から回答までの一連の流れ', type: :system do
       click_on '質問作成'
       expect(current_path).to eq '/questions/new'
 
-      expect do
+      expect {
         fill_in 'タイトル', with: 'form_withってなんですか'
         fill_in '質問内容', with: 'form_withが意味わかりません'
         click_on '質問する'
-      end.to change { Question.count }.by(1)
+      }.to change { Question.count }.by(1)
 
       question = Question.last
       expect(current_path).to eq "/questions/#{question.id}"
@@ -59,7 +59,7 @@ RSpec.describe '質問から回答までの一連の流れ', type: :system do
   end
 
   describe 'ステータスによる質問の絞り込み' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user)}
     let!(:solved_question1) { create(:question, title: '解決済み質問1', solved: true) }
     let!(:solved_question2) { create(:question, title: '解決済み質問2', solved: true) }
     let!(:unsolved_question1) { create(:question, title: '未解決質問1') }
@@ -88,7 +88,7 @@ RSpec.describe '質問から回答までの一連の流れ', type: :system do
   end
 
   describe 'ページング' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user)}
     let!(:questions) { create_list(:question, 30) }
     before do
       visit '/login'
@@ -105,7 +105,7 @@ RSpec.describe '質問から回答までの一連の流れ', type: :system do
   end
 
   describe '質問, 回答時のメール通知' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user)}
     let!(:yamada) { create(:user) }
     let!(:suzuki) { create(:user) }
     let!(:sato) { create(:user) }
@@ -119,11 +119,11 @@ RSpec.describe '質問から回答までの一連の流れ', type: :system do
       click_on '質問作成'
       expect(current_path).to eq '/questions/new'
 
-      expect do
+      expect {
         fill_in 'タイトル', with: 'form_withってなんですか'
         fill_in '質問内容', with: 'form_withが意味わかりません'
         click_on '質問する'
-      end.to change { Question.count }.by(1).and change { ActionMailer::Base.deliveries.size }.by(3)
+      }.to change { Question.count }.by(1).and change { ActionMailer::Base.deliveries.size }.by(3)
       expect(ActionMailer::Base.deliveries.flat_map(&:to)).to include(yamada.email)
       expect(ActionMailer::Base.deliveries.flat_map(&:to)).to include(suzuki.email)
       expect(ActionMailer::Base.deliveries.flat_map(&:to)).to include(sato.email)
@@ -135,10 +135,10 @@ RSpec.describe '質問から回答までの一連の流れ', type: :system do
       create(:answer, question: question, user: suzuki)
       visit "/questions/#{question.id}"
 
-      expect do
+      expect {
         fill_in '回答内容', with: 'Railsガイドを見ましょう'
         click_on '回答する'
-      end.to change { Answer.count }.by(1).and change { ActionMailer::Base.deliveries.size }.by(2)
+      }.to change { Answer.count }.by(1).and change { ActionMailer::Base.deliveries.size }.by(2)
       expect(ActionMailer::Base.deliveries.flat_map(&:to)).to include(yamada.email)
       expect(ActionMailer::Base.deliveries.flat_map(&:to)).to include(suzuki.email)
       expect(ActionMailer::Base.deliveries.flat_map(&:to)).not_to include(user.email)

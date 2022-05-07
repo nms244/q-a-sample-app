@@ -7,12 +7,12 @@ class QuestionsController < ApplicationController
   end
 
   def solved
-    @questions = Question.where(solved: true).order(created_at: :desc).page(params[:page]).per(5)
-    render 'index'
+    @questions = Question.eager_load(:user).where(solved: true).order(created_at: :desc).page(params[:page]).per(5)
+    render :index
   end
 
   def unsolved
-    @questions = Question.where(solved: false).order(created_at: :desc).page(params[:page]).per(5)
+    @questions = Question.eager_load(:user).where(solved: false).order(created_at: :desc).page(params[:page]).per(5)
     render :index
   end
 
@@ -22,8 +22,11 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.build(question_params)
+    @emails = User.where.not(id: @question.user_id).pluck(:email)
     if @question.save
-      QaMailer.question_notification(@question).deliver_now
+      @emails.each do |email|
+        QaMailer.question_notification(@question, email).deliver_now
+      end
       flash[:success] = '質問を作成しました'
       redirect_to @question
     else
@@ -34,7 +37,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.find(params[:id])
-    @answers = @question.answers
+    @answers = @question.answers.eager_load(:user)
     @answer = current_user.answers.build if logged_in?
   end
 
@@ -43,7 +46,7 @@ class QuestionsController < ApplicationController
   def update
     if @question.update(question_params)
       flash[:success] = '質問を更新しました'
-      redirect_to questions_path
+      redirect_to @question
     else
       flash.now[:danger] = '質問の更新ができませんでした'
       render 'edit'
@@ -69,7 +72,7 @@ class QuestionsController < ApplicationController
   private
 
   def correct_user
-    @question = current_user.questions.find(id: params[:id])
+    @question = current_user.questions.find(params[:id])
   end
 
   def question_params

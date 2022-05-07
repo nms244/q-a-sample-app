@@ -7,9 +7,9 @@ module SessionsHelper
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
   end
 
-  def current_user?(user)
-    user && user == current_user
-  end
+  # def current_user?(user)
+  #   user && user == current_user
+  # end
 
   def log_out
     session.delete(:user_id)

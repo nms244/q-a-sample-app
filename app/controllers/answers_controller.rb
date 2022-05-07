@@ -4,8 +4,12 @@ class AnswersController < ApplicationController
 
   def create
     @answer = current_user.answers.build(answer_params)
+    user_ids = @answer.question.answers.where.not(user_id: @answer.user_id).pluck(:user_id) + [@answer.question.user_id]
+    @emails = User.where(id: user_ids).pluck(:email)
     if @answer.save
-      QaMailer.answer_notification(@answer).deliver_now
+      @emails.each do |email|
+        QaMailer.answer_notification(@answer, email).deliver_now
+      end
       flash[:success] = '回答しました'
       redirect_to question_path(@answer.question_id)
     else
