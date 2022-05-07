@@ -1,9 +1,7 @@
 class UsersController < ApplicationController
-
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update, :destroy]
-
+  before_action :set_user, only: %i[edit update destroy]
+  before_action :logged_in_user, only: %i[index show edit update destroy]
+  # before_action :correct_user, only: %i[edit update destroy]
 
   def index
     @users = User.all
@@ -26,10 +24,10 @@ class UsersController < ApplicationController
   end
 
   def show
+    @user = User.find(params[:id])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @user.update(user_params)
@@ -48,21 +46,24 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
-
   private
 
-    def set_user
-      @user = User.find(params[:id])
+  def set_user
+    if current_user.id == params[:id]
+      @user = User.find(current_user.id)
+    else
+      raise RecordNotFound
     end
+  end
 
-    def correct_user
-      unless current_user?(@user)
-        flash[:danger] = '他のユーザは編集できません'
-        redirect_to questions_path
-      end
+  def correct_user
+    unless current_user?(@user)
+      flash[:danger] = '他のユーザは編集できません'
+      redirect_to questions_path
     end
+  end
 
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
+  def user_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
 end

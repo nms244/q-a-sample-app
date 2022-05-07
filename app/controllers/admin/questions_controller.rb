@@ -1,7 +1,5 @@
 class Admin::QuestionsController < ApplicationController
-
   before_action :admin_user
-
 
   def index
     @questions = Question.order(created_at: :desc).page(params[:page]).per(5)

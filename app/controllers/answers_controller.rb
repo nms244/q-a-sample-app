@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :logged_in_user, only: [:create, :destroy]
+  before_action :logged_in_user, only: %i[create destroy]
   before_action :correct_user, only: :destroy
 
   def create
@@ -23,15 +23,15 @@ class AnswersController < ApplicationController
 
   private
 
-    def answer_params
-      params.require(:answer).permit(:body, :question_id)
-    end
+  def answer_params
+    params.require(:answer).permit(:body, :question_id)
+  end
 
-    def correct_user
-      answer = current_user.answers.find_by(params[:id])
-      if answer.nil?
-        flash[:danger] = '他のユーザの回答は編集できません'
-        redirect_to question_path(Answer.find(params[:id]).question)
-      end
+  def correct_user
+    answer = current_user.answers.find_by(params[:id])
+    if answer.nil?
+      flash[:danger] = '他のユーザの回答は編集できません'
+      redirect_to question_path(Answer.find(params[:id]).question)
     end
+  end
 end

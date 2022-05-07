@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_04_030747) do
+ActiveRecord::Schema.define(version: 2022_05_07_070140) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2022_05_04_030747) do
   end
 
   create_table "answers", force: :cascade do |t|
-    t.string "body", null: false
+    t.text "body", null: false
     t.integer "user_id", null: false
     t.integer "question_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 2022_05_04_030747) do
 
   create_table "questions", force: :cascade do |t|
     t.string "title", null: false
-    t.string "body", null: false
+    t.text "body", null: false
     t.boolean "solved", default: false, null: false
     t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false

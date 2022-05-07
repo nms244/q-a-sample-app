@@ -1,9 +1,9 @@
 class QuestionsController < ApplicationController
-  before_action :logged_in_user, only: [:new, :create, :edit, :update, :destroy, :solve]
-  before_action :correct_user, only: [:edit, :update, :destroy, :solve]
+  before_action :logged_in_user, only: %i[new create edit update destroy solve]
+  before_action :correct_user, only: %i[edit update destroy solve]
 
   def index
-    @questions = Question.order(created_at: :desc).page(params[:page]).per(5)
+    @questions = Question.eager_load(:user).order(created_at: :desc).page(params[:page]).per(5)
   end
 
   def solved
@@ -13,7 +13,7 @@ class QuestionsController < ApplicationController
 
   def unsolved
     @questions = Question.where(solved: false).order(created_at: :desc).page(params[:page]).per(5)
-    render 'index'
+    render :index
   end
 
   def new
@@ -38,8 +38,7 @@ class QuestionsController < ApplicationController
     @answer = current_user.answers.build if logged_in?
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @question.update(question_params)
@@ -69,16 +68,11 @@ class QuestionsController < ApplicationController
 
   private
 
-    def correct_user
-      @question = current_user.questions.find_by(id: params[:id])
-      if @question.nil?
-        flash[:danger] = '他のユーザの質問は編集できません'
-        redirect_to root_url
-      end
-    end
+  def correct_user
+    @question = current_user.questions.find(id: params[:id])
+  end
 
-    def question_params
-      params.require(:question).permit(:title, :body)
-    end
-
+  def question_params
+    params.require(:question).permit(:title, :body)
+  end
 end

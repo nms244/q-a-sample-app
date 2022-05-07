@@ -1,10 +1,9 @@
 class Admin::SessionsController < ApplicationController
-  def new
-  end
+  def new; end
 
   def create
     user = User.find_by(email: params[:session][:email].downcase)
-    if user&.authenticate(params[:session][:password]) && user.admin?
+    if user&.authenticate(params[:session][:password]) && user&.admin?
       log_in user
       flash[:sucess] = 'ログインしました'
       redirect_to admin_users_path
