@@ -1,0 +1,10 @@
+<%= form_with model: @question do |f| %>
+
+  <%= f.label :title, "タイトル" %>
+  <%= f.text_field :title %>
+
+  <%= f.label :body, "質問内容" %>
+  <%= f.text_area :body, size: "30x10" %>
+
+  <%= f.submit yield(:button_text) %>
+<% end %>

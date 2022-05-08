@@ -1,0 +1,39 @@
+<h1>Questions#index</h1>
+
+<ul>
+  <li><%= link_to "全て", root_path %></li>
+</ul>
+<ul>
+  <li><%= link_to "未解決", unsolved_questions_path %></li>
+</ul>
+<ul>
+  <li><%= link_to "解決", solved_questions_path %></li>
+</ul>
+
+<ul>
+  <% @questions.each do |question| %>
+    <li>
+      <%= question.user.name %>
+    </li>
+    <li>
+      <%= question.title %>
+      <% if question.solved %>
+        <span>解決済み</span>
+      <% else %>
+        <span>未解決</span>
+      <% end %>
+    </li>
+    <li>
+      <%= simple_format(question.body) %>
+    </li>
+    <li>
+      <%= link_to "回答を見る", question %>
+    </li>
+    <% if logged_in? && current_user.id == question.user_id %>
+      <li>
+        <%= link_to "質問削除", question, method: :delete, data: {confirm: "質問を削除します"} %>
+      </li>
+    <% end %>
+  <% end %>
+  <%= paginate @questions %>
+</ul>
