@@ -1,14 +1,13 @@
 class AnswersController < ApplicationController
-  before_action :logged_in_user, only: %i[create destroy]
-  before_action :correct_user, only: :destroy
+  before_action :reject_not_logged_in_user, only: %i[create destroy]
+  before_action :reject_incorrect_user, only: :destroy
 
   def create
     @answer = current_user.answers.build(answer_params)
     user_ids = @answer.question.answers.where.not(user_id: @answer.user_id).pluck(:user_id) + [@answer.question.user_id]
-    @emails = User.where(id: user_ids).pluck(:email)
     if @answer.save
-      @emails.each do |email|
-        QaMailer.answer_notification(@answer, email).deliver_now
+      User.where(id: user_ids).find_each do |user|
+        QaMailer.answer_notification(@answer, user).deliver_now
       end
       flash[:success] = '回答しました'
       redirect_to question_path(@answer.question_id)
@@ -31,7 +30,7 @@ class AnswersController < ApplicationController
     params.require(:answer).permit(:body, :question_id)
   end
 
-  def correct_user
+  def reject_incorrect_user
     answer = current_user.answers.find_by(params[:id])
     if answer.nil?
       flash[:danger] = '他のユーザの回答は編集できません'

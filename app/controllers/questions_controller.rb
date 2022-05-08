@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
-  before_action :logged_in_user, only: %i[new create edit update destroy solve]
-  before_action :correct_user, only: %i[edit update destroy solve]
+  before_action :reject_not_logged_in_user, only: %i[new create edit update destroy solve]
+  before_action :reject_incorrect_user, only: %i[edit update destroy solve]
 
   def index
     @questions = Question.eager_load(:user).order(created_at: :desc).page(params[:page]).per(5)
@@ -22,16 +22,15 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.build(question_params)
-    @emails = User.where.not(id: @question.user_id).pluck(:email)
     if @question.save
-      @emails.each do |email|
-        QaMailer.question_notification(@question, email).deliver_now
+      User.where.not(id: @question.user_id).find_each do |user|
+        QaMailer.question_notification(@question, user).deliver_now
       end
       flash[:success] = '質問を作成しました'
       redirect_to @question
     else
       flash.now[:danger] = '質問の作成ができませんでした'
-      render 'new'
+      render :new
     end
   end
 
@@ -71,7 +70,7 @@ class QuestionsController < ApplicationController
 
   private
 
-  def correct_user
+  def reject_incorrect_user
     @question = current_user.questions.find(params[:id])
   end
 

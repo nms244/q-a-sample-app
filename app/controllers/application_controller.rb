@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def logged_in_user
+  def reject_not_logged_in_user
     unless logged_in?
       flash[:danger] = 'ログインしてください'
       redirect_to login_path

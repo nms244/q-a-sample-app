@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[edit update destroy]
-  before_action :logged_in_user, only: %i[index show edit update destroy]
-  # before_action :correct_user, only: %i[edit update destroy]
+  before_action :reject_not_logged_in_user, only: %i[index show edit update destroy]
+  before_action :reject_incorrect_user, only: %i[edit update destroy]
 
   def index
     @users = User.all
@@ -48,21 +47,11 @@ class UsersController < ApplicationController
 
   private
 
-  def set_user
-    # if current_user.id == params[:id]
-    #   @user = User.find(current_user.id)
-    # else
-    #   raise RecordNotFound
-    # end
+  def reject_incorrect_user
     if current_user.id == params[:id]
       @user = User.find(current_user.id)
-    end
-  end
-
-  def correct_user
-    unless current_user?(@user)
-      flash[:danger] = '他のユーザは編集できません'
-      redirect_to questions_path
+    else
+      raise ActiveRecord::RecordNotFound
     end
   end
 
